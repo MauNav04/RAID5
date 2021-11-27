@@ -5,9 +5,6 @@
 #include<fstream>
 #include<string>
 #include<vector>
-#include<opencv2/core/core.hpp>
-#include<opencv2/highgui/highgui.hpp>
-#include<opencv2/imgproc.hpp>
 #include<bitset>
 #include"Raid5.h"
 
@@ -36,6 +33,32 @@ int main()
     cout << "-> Which image would you like to see?" << endl;
     cin >> whImage;
     raid.Unstripping(whImage);
+
+    /*int newUser = raid.add_User("Mauro");
+    raid.add_File("Hola");
+    raid.add_File("Hola");
+    cout << newUser << endl;
+    
+    int newUser1 = raid.add_User("Mauro");
+    cout << newUser1 << endl;
+    
+    int newUser2 = raid.add_User("Marta");
+    raid.add_File("Hola");
+    cout << newUser2 << endl;
+
+    int newUser3 = raid.add_User("Pamela");
+    raid.add_File("Hola");
+    raid.add_File("Hola");
+    raid.add_File("Hola");
+    cout << newUser3 << endl;
+
+    cout << raid.userNames.size() << endl;
+    int currUsIndx = raid.userNames.size();
+    cout << raid.userFiles[currUsIndx - 1][2];
+
+    string currUser = raid.get_User();
+    cout << currUser << endl;*/
+
 
     return 0;
 }

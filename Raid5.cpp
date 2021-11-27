@@ -39,11 +39,29 @@ string Raid5::get_User()
 
 void Raid5::add_File(string bytes)
 {
-    
+    //this->Striping(bytes);
+    this->docIndex++;
+    //this->userFiles[this->currentUser].push_back(this->docIndex);
+    //this->send_to_database();
+
+    /*if (this->userFiles.size() < this->userNames.size()) 
+    {
+        vector<int> newStorage;
+        newStorage.push_back(this->docIndex);
+        this->userFiles[this->currentUser].push_back(newStorage);
+    }
+    else if(this->userFiles.size() == this->userNames.size())
+    {
+        int lastAdd = this->userFiles[this->currentUser].size();
+        this->userFiles[this->currentUser][lastAdd].push_back(this->docIndex);
+    }*/
+
 }
 
 void Raid5::send_to_database()
 {
+    string currUsername = this->get_User();
+    int currImageIndex = this->docIndex;
 }
 
 void Raid5::set_iPath(string iPath)
@@ -213,6 +231,8 @@ void Raid5::Striping()
 
 void Raid5::Striping(string binData)
 {
+    this->docIndex++;
+
     vector<string> strippedPaths;
 
     int counter = 0;
