@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>
+#include<iostream>
 #include<fstream>
 #include<string>
 #include<vector>
@@ -18,7 +18,11 @@ public:
 	/**
 	* @brief string that locates the root folders where the raid will work
 	*/
-	string disksPath = "raid5/DISCO";
+    string disksPath = "C:/Users/fantu/Desktop/LoginApp/LoginApp/raid5/DISCO";
+
+    string ImStoragePath = "C:/Users/fantu/Desktop/LoginApp/LoginApp/builtImg";
+
+    string showingImg;
 	/**
 	* @brief counter that indicates how many documents are being holded by the raid
 	*/
@@ -32,9 +36,7 @@ public:
 	*/
 	int currentUser;
 
-	vector<string> userNames;
-
-	vector<vector<int>> userFiles;
+    int shownImage = 0;
 
 	//===== Methods =====//
 	// constructor
@@ -96,12 +98,21 @@ public:
 	void Striping();
 
 	void Striping(string binData);
-	/**
+
+    int getShown();
+
+    void possibleShowP();
+
+    void possibleShowL();
+
+    /**
 	* @brief When given an image Index, it searches for the parts of that image and puts the together, and generates the image file
 	* @param [int] Indicating the index of the image that will be reconstructed 
 	* @return [int] Indicating that the image was built. Returns -1 if the image is not on stored on the raid
 	*/
 	int Unstripping(int retrievedIndex);
+
+
 	/**
 	* @brief Overloaded method. When an image has been striped, it generates the parity file for this image
 	* @param [vector<string>] The vector holds the paths were the parts of the image are stored

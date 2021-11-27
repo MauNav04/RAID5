@@ -4,38 +4,38 @@ Raid5::Raid5()
 {
 }
 
-int Raid5::add_User(string in_name)
-{
-    for (string name : this->userNames) 
-    {
-        if (in_name == name)
-        {
-            return -1;
-        }
-    }
-    this->userNames.push_back(in_name);
+//int Raid5::add_User(string in_name)
+//{
+//    for (string name : this->userNames)
+//    {
+//        if (in_name == name)
+//        {
+//            return -1;
+//        }
+//    }
+//    this->userNames.push_back(in_name);
     
-    for (int i = 0; i < this->userNames.size(); i++)
-    {
-        if (this->userNames[i] == in_name)
-        {
-            this->currentUser = i;
-        }
-    }
+//    for (int i = 0; i < this->userNames.size(); i++)
+//    {
+//        if (this->userNames[i] == in_name)
+//        {
+//            this->currentUser = i;
+//        }
+//    }
 
-    return 0;
-}
+//    return 0;
+//}
 
-string Raid5::get_User()
-{   
-    for (int i = 0; i < this->userNames.size(); i++)
-    {
-        if (i == this->currentUser)
-        {
-            return this->userNames[i];
-        }
-    }
-}
+//string Raid5::get_User()
+//{
+//    for (int i = 0; i < this->userNames.size(); i++)
+//    {
+//        if (i == this->currentUser)
+//        {
+//            return this->userNames[i];
+//        }
+//    }
+//}
 
 void Raid5::add_File(string bytes)
 {
@@ -58,11 +58,11 @@ void Raid5::add_File(string bytes)
 
 }
 
-void Raid5::send_to_database()
-{
-    string currUsername = this->get_User();
-    int currImageIndex = this->docIndex;
-}
+//void Raid5::send_to_database()
+//{
+//    string currUsername = this->get_User();
+//    int currImageIndex = this->docIndex;
+//}
 
 void Raid5::set_iPath(string iPath)
 {
@@ -80,6 +80,7 @@ string Raid5::ReadFile()
     fin.read(&data[0], data.size());
 
     this->docIndex++;
+    this->shownImage++;
 
     return data;
 }
@@ -206,6 +207,8 @@ void Raid5::Striping()
                 stripFile.put(binData[counter + i]);
             }
             stripFile.put(this->currentUser);
+
+            stripFile.close();
         }
         else
         {
@@ -214,6 +217,7 @@ void Raid5::Striping()
                 stripFile.put(binData[counter + i]);
             }
             stripFile.put(this->currentUser);
+            stripFile.close();
         }
 
         cout << "-> Convertion form bin to text for file # " << this->docIndex << " is done" << endl;
@@ -261,7 +265,7 @@ void Raid5::Striping(string binData)
 
         if (counter + divideParameter > dataLen)
         {
-            for (int i = 0; i < dataLen + 1 - counter; i++)
+            for (int i = 0; i < dataLen - counter; i++)
             {
                 stripFile.put(binData[counter + i]);
             }
@@ -283,20 +287,51 @@ void Raid5::Striping(string binData)
         partIndex++;
         counter += divideParameter;
 
-        strippedPaths.push_back(fileName);
+        //strippedPaths.push_back(fileName);
     }
 
     this->GenParity(strippedPaths);
 }
 
+int Raid5::getShown()
+{
+    int a = this->shownImage;
+    return a;
+}
+
+void Raid5::possibleShowP()
+{
+    int possible = this->getShown();
+    this->Unstripping(possible += 1);
+
+}
+
+void Raid5::possibleShowL()
+{
+    cout << "pos img: " << shownImage << endl;
+    int possible = this->getShown();
+    cout << "pos img: " << shownImage << endl;
+    this->Unstripping(possible -= 1);
+    cout << "Estamos en la fama" << endl;
+}
+
 int Raid5::Unstripping(int retrievedIndex)
 {
-    int parity4file = this->CalculateParity(retrievedIndex);
-    if (parity4file < 0) 
-    { 
-        cout << "** ERROR: The solicited image is out of the range of the gallery";
+    if(retrievedIndex < 1 || retrievedIndex > this->docIndex)
+    {
+        cout << "error"<< endl;
         return -1;
     }
+
+    int parity4file = this->CalculateParity(retrievedIndex);
+
+//    if (parity4file < 0)
+//    {
+//        cout << "** ERROR: The solicited image is out of the range of the gallery";
+//        return -1;
+//    }
+
+    this->shownImage = retrievedIndex;
 
     vector<string> retrievedPaths;
     int diskRetrieved = 1;
@@ -322,12 +357,17 @@ int Raid5::Unstripping(int retrievedIndex)
 
     string total_image_bytes = byteA1 + byteA2 + byteA3;
 
-    WriteFile("unstrp.png", total_image_bytes);
+    string deployingPath = this->ImStoragePath + "/" + to_string(this->shownImage) + ".png";
+
+    WriteFile(deployingPath, total_image_bytes);
+
+    this->showingImg = deployingPath;
 
     cout << "-> Unstripping's been finished" << endl;
 
     return 0;
 }
+
 
 void Raid5::GenParity(vector<string> stPaths)
 {
@@ -336,20 +376,20 @@ void Raid5::GenParity(vector<string> stPaths)
     string byteA3 = ReadFile(stPaths[2]);
 
     string xor1;
-    xor1.resize(byteA1.length());
+    xor1.resize(static_cast<int>(byteA1.length()));
 
     string xorP;
-    xorP.resize(byteA1.length());
+    xorP.resize(static_cast<int>(byteA1.length()));
 
-    for (int i = 0; i < byteA1.length(); i++)
+    for (int i = 0; i < static_cast<int>(byteA1.length()); i++)
     {
-        int b1 = (int)byteA1[i];
-        int b2 = (int)byteA2[i];
-        int res = b1 xor b2;
-        xor1[i] = static_cast<char> (res);
+        int b1 = static_cast<int>(byteA1[i]);
+        int b2 = static_cast<int>(byteA2[i]);
+        int res = b1 ^ b2;
+        xor1[i] = res;
     }
 
-    for (int i = 0; i < byteA2.length(); i++)
+    for (int i = 0; i < (int)byteA2.length(); i++)
     {
         xorP[i] = (int)xor1[i] ^ (int)byteA3[i];
     }
@@ -478,6 +518,6 @@ void Raid5::Rebuild(int diskIndex)
             this->WriteFile(fileName, xorP);
 
             cout << "Se reconstruyó parte " << missingPart << " para el archivo # " << i << endl;
-        }   
+        }
     }
 }

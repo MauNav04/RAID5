@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int main()
+/*int main()
 {
     string image_Path = "C:/Users/fantu/Documents/Semestre2-2021/Datos2/Proyecto3/Proyecto/Proyecto3_pruebas/asets/lineasH.png";
     string image_Path1 = "C:/Users/fantu/Documents/Semestre2-2021/Datos2/Proyecto3/Proyecto/Proyecto3_pruebas/asets/diagonales.png";
@@ -34,7 +34,7 @@ int main()
     cin >> whImage;
     raid.Unstripping(whImage);
 
-    /*int newUser = raid.add_User("Mauro");
+    int newUser = raid.add_User("Mauro");
     raid.add_File("Hola");
     raid.add_File("Hola");
     cout << newUser << endl;
@@ -57,9 +57,9 @@ int main()
     cout << raid.userFiles[currUsIndx - 1][2];
 
     string currUser = raid.get_User();
-    cout << currUser << endl;*/
+    cout << currUser << endl;
 
 
     return 0;
-}
+}*/
 
